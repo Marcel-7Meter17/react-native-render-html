@@ -27,7 +27,7 @@ export const MIXED_TAGS = ['a'];
 export const TEXT_TAGS_IGNORING_ASSOCIATION = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 
 export const ABSOLUTE_FONT_SIZE = {
-    'medium': 14,
+    'medium': 16,
     'xx-small': 8.5,
     'x-small': 10,
     'small': 12,

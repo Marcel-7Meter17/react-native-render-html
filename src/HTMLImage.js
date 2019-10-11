@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Image, View, Text } from 'react-native';
 import PropTypes from 'prop-types';
+import { RkText } from 'react-native-ui-kitten';
 
 export default class HTMLImage extends PureComponent {
     constructor (props) {
@@ -103,6 +104,7 @@ export default class HTMLImage extends PureComponent {
     }
 
     validImage (source, style, props = {}) {
+        source.cache = 'force-cache';
         return (
             <Image
               source={source}
@@ -115,7 +117,7 @@ export default class HTMLImage extends PureComponent {
     get errorImage () {
         return (
             <View style={{ width: 50, height: 50, borderWidth: 1, borderColor: 'lightgray', overflow: 'hidden', justifyContent: 'center' }}>
-                { this.props.alt ? <Text style={{ textAlign: 'center', fontStyle: 'italic' }}>{ this.props.alt }</Text> : false }
+                { this.props.alt ? <RkText rkType="basic" style={{ textAlign: 'center', fontStyle: 'italic' }}>{ this.props.alt }</RkText> : false }
             </View>
         );
     }

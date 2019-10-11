@@ -1,15 +1,23 @@
-import { PERC_SUPPORTED_STYLES, STYLESETS, ABSOLUTE_FONT_SIZE, stylePropTypes } from './HTMLUtils';
-import { generateDefaultBlockStyles, generateDefaultTextStyles } from './HTMLDefaultStyles';
+import {
+    PERC_SUPPORTED_STYLES,
+    STYLESETS,
+    ABSOLUTE_FONT_SIZE,
+    stylePropTypes
+} from './HTMLUtils';
+import {
+    generateDefaultBlockStyles,
+    generateDefaultTextStyles
+} from './HTMLDefaultStyles';
 
 /**
-* Converts a html style string to an object
-* @param str: the style string
-* @return the style as an obect
-*/
+ * Converts a html style string to an object
+ * @param str: the style string
+ * @return the style as an obect
+ */
 export function cssStringToObject (str) {
     return str
         .split(';')
-        .map((prop) => prop.split(':'))
+        .map(prop => prop.split(':'))
         .reduce((acc, prop) => {
             if (prop.length === 2) {
                 acc[prop[0].trim()] = prop[1].trim();
@@ -20,7 +28,7 @@ export function cssStringToObject (str) {
 
 export function cssObjectToString (obj) {
     let string = '';
-    Object.keys(obj).forEach((style) => {
+    Object.keys(obj).forEach(style => {
         string += `${style}:${obj[style]};`;
     });
     return string;
@@ -34,11 +42,18 @@ export function cssObjectToString (obj) {
  * @param {any} { tagName, htmlAttribs, passProps, additionalStyles, styleSet = 'VIEW' }
  * @returns {object}
  */
-export function _constructStyles ({ tagName, htmlAttribs, passProps, additionalStyles, styleSet = 'VIEW', baseFontSize }) {
+export function _constructStyles ({
+    tagName,
+    htmlAttribs,
+    passProps,
+    additionalStyles,
+    styleSet = 'VIEW',
+    baseFontSize
+}) {
     let defaultTextStyles = generateDefaultTextStyles(baseFontSize);
     let defaultBlockStyles = generateDefaultBlockStyles(baseFontSize);
 
-    passProps.ignoredStyles.forEach((ignoredStyle) => {
+    passProps.ignoredStyles.forEach(ignoredStyle => {
         htmlAttribs[ignoredStyle] && delete htmlAttribs[ignoredStyle];
     });
 
@@ -47,19 +62,20 @@ export function _constructStyles ({ tagName, htmlAttribs, passProps, additionalS
         passProps.tagsStyles ? passProps.tagsStyles[tagName] : undefined,
         _getElementClassStyles(htmlAttribs, passProps.classesStyles),
         htmlAttribs.style ?
-            cssStringToRNStyle(
-                htmlAttribs.style,
-                STYLESETS[styleSet],
-                { ...passProps, parentTag: tagName }
-            ) :
+            cssStringToRNStyle(htmlAttribs.style, STYLESETS[styleSet], {
+                ...passProps,
+                parentTag: tagName
+            }) :
             undefined
     ];
 
     if (additionalStyles) {
-        style = style.concat(!additionalStyles.length ? [additionalStyles] : additionalStyles);
+        style = style.concat(
+            !additionalStyles.length ? [additionalStyles] : additionalStyles
+        );
     }
 
-    return style.filter((style) => style !== undefined);
+    return style.filter(style => style !== undefined);
 }
 
 /**
@@ -74,14 +90,17 @@ export function computeTextStyles (element, passProps) {
 
     // Construct an array with the styles of each level of the text node, ie :
     // [element, parent1, parent2, parent3...]
-    const parentStyles = _recursivelyComputeParentTextStyles(element, passProps);
+    const parentStyles = _recursivelyComputeParentTextStyles(
+        element,
+        passProps
+    );
 
     // Only merge the keys that aren't yet applied to the final object. ie:
     // if fontSize is already set in the first iteration, ignore the fontSize that
     // we got from the 3rd iteration because of a class for instance, hence
     // respecting the proper style inheritance
-    parentStyles.forEach((styles) => {
-        Object.keys(styles).forEach((styleKey) => {
+    parentStyles.forEach(styles => {
+        Object.keys(styles).forEach(styleKey => {
             const styleValue = styles[styleKey];
             if (!finalStyle[styleKey]) {
                 finalStyle[styleKey] = styleValue;
@@ -99,10 +118,16 @@ function _recursivelyComputeParentTextStyles (element, passProps, styles = []) {
     const { classesStyles, tagsStyles, defaultTextStyles } = passProps;
 
     // Construct every style for this node
-    const HTMLAttribsStyles = attribs && attribs.style ? cssStringToRNStyle(attribs.style, STYLESETS.TEXT, passProps) : {};
+    const HTMLAttribsStyles =
+        attribs && attribs.style ?
+            cssStringToRNStyle(attribs.style, STYLESETS.TEXT, passProps) :
+            {};
     const classStyles = _getElementClassStyles(attribs, classesStyles);
     const userTagStyles = tagsStyles[name];
     const defaultTagStyles = defaultTextStyles[name];
+    if (HTMLAttribsStyles.fontSize) {
+        HTMLAttribsStyles.lineHeight = HTMLAttribsStyles.fontSize + 1.2;
+    }
 
     // Merge those according to their priority level
     const mergedStyles = {
@@ -116,7 +141,11 @@ function _recursivelyComputeParentTextStyles (element, passProps, styles = []) {
 
     if (element.parent) {
         // Keep looping recursively if this node has parents
-        return _recursivelyComputeParentTextStyles(element.parent, passProps, styles);
+        return _recursivelyComputeParentTextStyles(
+            element.parent,
+            passProps,
+            styles
+        );
     } else {
         return styles;
     }
@@ -132,7 +161,7 @@ function _recursivelyComputeParentTextStyles (element, passProps, styles = []) {
 export function _getElementClassStyles (htmlAttribs, classesStyles = {}) {
     const elementClasses = _getElementCSSClasses(htmlAttribs);
     let styles = {};
-    elementClasses.forEach((className) => {
+    elementClasses.forEach(className => {
         if (classesStyles[className]) {
             styles = { ...styles, ...classesStyles[className] };
         }
@@ -160,18 +189,28 @@ export function _getElementCSSClasses (htmlAttribs) {
  * @param {object} { parentTag, emSize, ignoredStyles }
  * @returns {object}
  */
-function cssToRNStyle (css, styleset, { emSize, ptSize, ignoredStyles, allowedStyles }) {
+function cssToRNStyle (
+    css,
+    styleset,
+    { emSize, ptSize, ignoredStyles, allowedStyles }
+) {
     const styleProps = stylePropTypes[styleset];
     return Object.keys(css)
-        .filter((key) => allowedStyles ? allowedStyles.indexOf(key) !== -1 : true)
-        .filter((key) => (ignoredStyles || []).indexOf(key) === -1)
-        .map((key) => [key, css[key]])
+        .filter(key =>
+            allowedStyles ? allowedStyles.indexOf(key) !== -1 : true
+        )
+        .filter(key => (ignoredStyles || []).indexOf(key) === -1)
+        .map(key => [key, css[key]])
         .map(([key, value]) => {
             // Key convert
             return [
                 key
                     .split('-')
-                    .map((item, index) => index === 0 ? item : item[0].toUpperCase() + item.substr(1))
+                    .map((item, index) =>
+                        index === 0 ?
+                            item :
+                            item[0].toUpperCase() + item.substr(1)
+                    )
                     .join(''),
                 value
             ];
@@ -182,12 +221,19 @@ function cssToRNStyle (css, styleset, { emSize, ptSize, ignoredStyles, allowedSt
             }
 
             if (typeof value === 'string') {
-                if (value.search('inherit') !== -1 || value.search('calc') !== -1 || value.search('normal') !== -1) {
+                if (
+                    value.search('inherit') !== -1 ||
+                    value.search('calc') !== -1 ||
+                    value.search('normal') !== -1
+                ) {
                     return undefined;
                 }
                 value = value.replace('!important', '');
                 // See if we can use the percentage directly
-                if (value.search('%') !== -1 && PERC_SUPPORTED_STYLES.indexOf(key) !== -1) {
+                if (
+                    value.search('%') !== -1 &&
+                    PERC_SUPPORTED_STYLES.indexOf(key) !== -1
+                ) {
                     return [key, value];
                 }
                 if (value.search('em') !== -1) {
@@ -211,7 +257,7 @@ function cssToRNStyle (css, styleset, { emSize, ptSize, ignoredStyles, allowedSt
             }
             return [key, value];
         })
-        .filter((prop) => prop !== undefined)
+        .filter(prop => prop !== undefined)
         .reduce((acc, [key, value]) => {
             acc[key] = value;
             return acc;
@@ -219,10 +265,10 @@ function cssToRNStyle (css, styleset, { emSize, ptSize, ignoredStyles, allowedSt
 }
 
 /**
-* @param {string} key: the key of style
-* @param {string} value: the value of style
-* @return {array}
-*/
+ * @param {string} key: the key of style
+ * @param {string} value: the value of style
+ * @return {array}
+ */
 function mapAbsoluteFontSize (key, value) {
     let fontSize = value;
     if (ABSOLUTE_FONT_SIZE.hasOwnProperty(value)) {
@@ -232,10 +278,10 @@ function mapAbsoluteFontSize (key, value) {
 }
 
 /**
-* @param str: the css style string
-* @param styleset=STYLESETS.TEXT: the styleset to convert the styles against
-* @return a react native style object
-*/
+ * @param str: the css style string
+ * @param styleset=STYLESETS.TEXT: the styleset to convert the styles against
+ * @return a react native style object
+ */
 export function cssStringToRNStyle (str, styleset = STYLESETS.TEXT, options) {
     return cssToRNStyle(cssStringToObject(str), styleset, options);
 }
