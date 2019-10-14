@@ -21,7 +21,13 @@ export function a (htmlAttribs, children, convertedCSSStyles, passProps) {
 
     if (parentWrapper === 'Text') {
         return (
-            <RkText rkType="basic" {...passProps} style={style} onPress={onPress} key={key}>
+            <RkText
+                rkType='basic'
+                {...passProps}
+                style={style}
+                onPress={onPress}
+                key={key}
+            >
                 {children || data}
             </RkText>
         );
@@ -98,9 +104,16 @@ export function ul (htmlAttribs, children, convertedCSSStyles, passProps = {}) {
                         listsPrefixesRenderers && listsPrefixesRenderers.ul ? (
                             listsPrefixesRenderers.ul(...rendererArgs)
                         ) : (
-                            <RkText allowFontScaling={allowFontScaling} rkType='basic' style={{ marginRight: 5 }}>
-                                {'\u2022'}
-                            </RkText>
+                            <View
+                                style={{
+                                    marginRight: 5,
+                                    width: baseFontSize / 2.8,
+                                    height: baseFontSize / 2.8,
+                                    marginTop: baseFontSize / 2,
+                                    borderRadius: baseFontSize / 2.8,
+                                    backgroundColor: 'black'
+                                }}
+                            />
                         );
                 } else if (
                     rawChild.parentTag === 'ol' &&
