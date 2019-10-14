@@ -21,9 +21,9 @@ export function a (htmlAttribs, children, convertedCSSStyles, passProps) {
 
     if (parentWrapper === 'Text') {
         return (
-            <Text {...passProps} style={style} onPress={onPress} key={key}>
+            <RkText rkType="basic" {...passProps} style={style} onPress={onPress} key={key}>
                 {children || data}
-            </Text>
+            </RkText>
         );
     } else {
         return (
@@ -98,7 +98,7 @@ export function ul (htmlAttribs, children, convertedCSSStyles, passProps = {}) {
                         listsPrefixesRenderers && listsPrefixesRenderers.ul ? (
                             listsPrefixesRenderers.ul(...rendererArgs)
                         ) : (
-                            <RkText rkType='basic' style={{ marginRight: 5 }}>
+                            <RkText allowFontScaling={allowFontScaling} rkType='basic' style={{ marginRight: 5 }}>
                                 {'\u2022'}
                             </RkText>
                         );
@@ -119,7 +119,7 @@ export function ul (htmlAttribs, children, convertedCSSStyles, passProps = {}) {
                                     fontSize: baseFontSize
                                 }}
                             >
-                                {i})
+                                {i}.
                             </RkText>
                         );
                 }
@@ -145,7 +145,7 @@ export function ul (htmlAttribs, children, convertedCSSStyles, passProps = {}) {
             return (
                 <View
                     key={`list-${nodeIndex}-${index}-${key}`}
-                    style={{ flexDirection: 'row', marginBottom: 10 }}
+                    style={{ flexDirection: 'row', marginBottom: 16 }}
                 >
                     {prefix}
                     <View style={{ flex: 1 }}>{child}</View>
