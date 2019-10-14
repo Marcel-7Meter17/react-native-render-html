@@ -620,7 +620,8 @@ export default class HTML extends PureComponent {
                     classesStyles
                 );
                 const textElement = data ? (
-                    <Text
+                    <RkText
+                      rkType='basic textGreyColor'
                       allowFontScaling={allowFontScaling}
                       style={computeTextStyles(element, {
                             defaultTextStyles: this.defaultTextStyles,
@@ -634,14 +635,14 @@ export default class HTML extends PureComponent {
                         })}
                     >
                         {data}
-                    </Text>
+                    </RkText>
                 ) : (
                     false
                 );
 
                 const style = [
                     !tagsStyles || !tagsStyles[tagName] ?
-                        (Wrapper === Text ?
+                        (Wrapper === RkText ?
                             this.defaultTextStyles :
                             this.defaultBlockStyles)[tagName] :
                         undefined,
@@ -651,7 +652,7 @@ export default class HTML extends PureComponent {
                 ].filter(s => s !== undefined);
 
                 const renderersProps = {};
-                if (Wrapper === Text) {
+                if (Wrapper === RkText) {
                     renderersProps.allowFontScaling = allowFontScaling;
                     renderersProps.selectable = textSelectable;
                 }
