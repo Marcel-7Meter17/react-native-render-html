@@ -657,10 +657,12 @@ export default class HTML extends PureComponent {
                     renderersProps.selectable = textSelectable;
                 }
                 return (
-                    <Wrapper key={key} style={style} {...renderersProps}>
+                    <View>
                         {textElement}
                         {childElements}
-                    </Wrapper>
+                    </View>
+                // <Wrapper key={key} style={style} {...renderersProps}>
+                // </Wrapper>
                 );
             }) :
             false;
