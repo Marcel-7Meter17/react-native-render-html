@@ -551,13 +551,15 @@ export default class HTML extends PureComponent {
                     nodeIndex,
                     wrapper
                 } = element;
-                const Wrapper = wrapper === 'Text' ? Text : View;
+                //   console.log(wrapper);
+
+                const Wrapper = wrapper === 'Text' ? RkText : View;
                 const key = `${wrapper}-${parentIndex}-${nodeIndex}-${tagName}-${index}-${parentTag}`;
                 const convertedCSSStyles =
                       attribs && attribs.style ?
                           cssStringToRNStyle(
                               attribs.style,
-                              Wrapper === Text ?
+                              Wrapper === RkText ?
                                   STYLESETS.TEXT :
                                   STYLESETS.VIEW, // proper prop-types validation
                               {
@@ -619,6 +621,8 @@ export default class HTML extends PureComponent {
                     attribs,
                     classesStyles
                 );
+                console.log(parentTag);
+
                 const textElement = data ? (
                     <RkText
                       rkType='basic textGreyColor'
@@ -653,16 +657,19 @@ export default class HTML extends PureComponent {
 
                 const renderersProps = {};
                 if (Wrapper === RkText) {
+                    renderersProps.rkType = 'basic';
                     renderersProps.allowFontScaling = allowFontScaling;
                     renderersProps.selectable = textSelectable;
                 }
                 return (
-                    <View>
+                // <View>
+                //     {textElement}
+                //     {childElements}
+                // </View>
+                    <Wrapper key={key} style={style} {...renderersProps}>
                         {textElement}
                         {childElements}
-                    </View>
-                // <Wrapper key={key} style={style} {...renderersProps}>
-                // </Wrapper>
+                    </Wrapper>
                 );
             }) :
             false;

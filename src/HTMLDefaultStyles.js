@@ -3,12 +3,8 @@ const BASE_FONT_SIZE = 16;
 export function generateDefaultBlockStyles (baseFontSize = BASE_FONT_SIZE) {
     return {
         div: {},
-        ul: {
-            // marginBottom: baseFontSize
-        },
-        ol: {
-            // marginBottom: baseFontSize
-        },
+        ul: {},
+        ol: {},
         iframe: {
             height: 200
         },
