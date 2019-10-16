@@ -621,8 +621,6 @@ export default class HTML extends PureComponent {
                     attribs,
                     classesStyles
                 );
-                console.log(parentTag);
-
                 const textElement = data ? (
                     <RkText
                       rkType='basic textGreyColor'
